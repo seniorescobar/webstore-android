@@ -12,18 +12,24 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DisplayMessageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_message);
+        setContentView(R.layout.activity_display_item);
 
-        final TextView textView = findViewById(R.id.textView);
+        final TextView textName = findViewById(R.id.textName);
+        final TextView textDescription = findViewById(R.id.textDescription);
+        final TextView textPrice = findViewById(R.id.textPrice);
+
         Intent intent = getIntent();
+        final String url = intent.getStringExtra(MainActivity.EXTRA_URL);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = intent.getStringExtra(MainActivity.EXTRA_URL);
 
         StringRequest stringRequest = new StringRequest(
             Request.Method.GET,
@@ -31,13 +37,25 @@ public class DisplayMessageActivity extends AppCompatActivity {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    textView.setText(response);
+                    try {
+                        JSONObject item = new JSONObject(response);
+
+                        String name = item.getString("name");
+                        String description = item.getString("description");
+                        String price = item.getString("price");
+
+                        textName.setText(name);
+                        textDescription.setText(description);
+                        textPrice.setText(price + " €");
+                    } catch (final JSONException e) {
+                        // Handle error
+                    }
                 }
             },
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    textView.setText("That didn't work!");
+                    // Handle error
                 }
             }
         );
