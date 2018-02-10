@@ -15,8 +15,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DisplayMessageActivity extends AppCompatActivity {
-
+public class DisplayItemActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +26,11 @@ public class DisplayMessageActivity extends AppCompatActivity {
         final TextView textPrice = findViewById(R.id.textPrice);
 
         Intent intent = getIntent();
-        final String url = intent.getStringExtra(MainActivity.EXTRA_URL);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-
         StringRequest stringRequest = new StringRequest(
             Request.Method.GET,
-            url,
+            intent.getStringExtra(MainActivity.EXTRA_URL),
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -59,7 +56,6 @@ public class DisplayMessageActivity extends AppCompatActivity {
                 }
             }
         );
-
         queue.add(stringRequest);
     }
 }

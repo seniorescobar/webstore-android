@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DisplayMessageActivity"
+            android:name=".DisplayItemActivity"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>

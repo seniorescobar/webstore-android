@@ -1,17 +1,12 @@
 package local.webstore;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +20,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_URL = "com.example.myfirstapp.URL";
+    public static final String API_URL = "http://192.168.0.27/api/izdelki";
     public static final String BASE_URL = "http://192.168.0.27/api/izdelek/%d";
 
     @Override
@@ -36,28 +31,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Context context = this;
-
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String apiUrl = "http://192.168.0.27/api/izdelki";
-
-        final ListView listView = (ListView) findViewById(R.id.listView);
-
+        // Arrays
         final ArrayList itemList = new ArrayList<String>();
         final ArrayList idList = new ArrayList<Integer>();
 
-        final Intent itemIntent = new Intent(this, DisplayMessageActivity.class);
+        final ListView listView = (ListView) findViewById(R.id.listView);
 
+        final Intent itemIntent = new Intent(this, DisplayItemActivity.class);
 
-
+        RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(
                 Request.Method.GET,
-                apiUrl,
+                API_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-
                         try {
                             JSONArray items = new JSONArray(response);
                             for (int i = 0; i < items.length(); i++) {
@@ -85,31 +73,17 @@ public class MainActivity extends AppCompatActivity {
                             });
 
                         } catch (final JSONException e) {
-
+                            // Handle error
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        // Handle error
                     }
                 }
         );
-
         queue.add(stringRequest);
-
-
     }
-
-    /** Called when the user taps the Send button */
-    /*public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-
-        EditText editText = (EditText) findViewById(R.id.editText);
-        String url = editText.getText().toString();
-
-        intent.putExtra(EXTRA_URL, url);
-        startActivity(intent);
-    }*/
 }
